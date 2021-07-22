@@ -1,6 +1,7 @@
 export * from './array';
 export * from './cards';
 export * from './curry';
+export * from './eventEmitter';
 export * from './format';
 export * as Http from './http/index';
 export * from './identical';
@@ -14,4 +15,3 @@ export * from './sort';
 export * as Sort from './sort-compare';
 export * from './stopwatch';
 export * from './toDigits';
-export * from './typedEventEmitter';

@@ -55,3 +55,32 @@ interface BaseTypedEventEmitter<T extends EventListeners> extends EventEmitter {
  * ```
  */
 export interface TypedEventEmitter<T extends EventListeners = {}> extends BaseTypedEventEmitter<T & BuiltInEvents<T>> {}
+
+type WildcardEventEmitterEvents<T extends EventListeners> = {
+	'*': <E extends keyof T>(event: E, ...data: Parameters<T[E]>) => void;
+};
+
+/**
+ * A typed event emitter that emits a `*` event whenever any event is emitted.
+ */
+export class WildcardEventEmitter<
+	T extends WildcardEventEmitterEvents = WildcardEventEmitterEvents<{}>
+> extends (EventEmitter as new () => TypedEventEmitter<T>) {
+	constructor() {
+		super();
+
+		this.on('newListener', event => {
+			switch (event) {
+				case '*':
+				case 'newListener':
+				case 'removeListener':
+					break;
+				default:
+					this.on(event, (...data) => {
+						this.emit('*', event, ...data);
+					});
+					break;
+			}
+		});
+	}
+}
